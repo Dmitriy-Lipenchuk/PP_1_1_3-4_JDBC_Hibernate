@@ -42,10 +42,6 @@ public class Util {
                 connection.close();
             }
 
-            if (sessionFactory != null) {
-                sessionFactory.close();
-            }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -80,5 +76,11 @@ public class Util {
         }
 
         return sessionFactory;
+    }
+
+    public static void closeSessionFactory() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 }

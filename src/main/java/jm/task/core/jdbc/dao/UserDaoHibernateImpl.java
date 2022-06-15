@@ -30,7 +30,7 @@ public class UserDaoHibernateImpl implements UserDao {
                     .addEntity(User.class)
                     .executeUpdate();
 
-            transaction.commit();
+            transaction.rollback();
         }
     }
 
@@ -43,7 +43,7 @@ public class UserDaoHibernateImpl implements UserDao {
                     .addEntity(User.class)
                     .executeUpdate();
 
-            transaction.commit();
+            transaction.rollback();
         }
     }
 
@@ -77,7 +77,7 @@ public class UserDaoHibernateImpl implements UserDao {
                     .addEntity(User.class)
                     .executeUpdate();
 
-            transaction.commit();
+            transaction.rollback();
         }
     }
 }
