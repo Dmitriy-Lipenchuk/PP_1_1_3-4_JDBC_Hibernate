@@ -2,6 +2,7 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,7 +19,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            session.beginTransaction();
 
             session.createSQLQuery("""
                             CREATE TABLE IF NOT EXISTS users(
@@ -30,20 +31,24 @@ public class UserDaoHibernateImpl implements UserDao {
                     .addEntity(User.class)
                     .executeUpdate();
 
-            transaction.rollback();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 
     @Override
     public void dropUsersTable() {
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            session.beginTransaction();
 
             session.createSQLQuery("DROP TABLE IF EXISTS users")
                     .addEntity(User.class)
                     .executeUpdate();
 
-            transaction.rollback();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 
@@ -71,13 +76,15 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            session.beginTransaction();
 
             session.createSQLQuery("TRUNCATE TABLE users")
                     .addEntity(User.class)
                     .executeUpdate();
 
-            transaction.rollback();
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 }
